@@ -11,19 +11,18 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState('');
     const [isUploading, setIsUploading] = useState(false);
+    const baseUrl = process.env.REACT_APP_BASE_API;
 
-    const navigate = useNavigate();  // Using navigate for redirect
+    const navigate = useNavigate();
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
 
-        // File type validation (e.g., allow only images)
         if (selectedFile && !selectedFile.type.startsWith('image/')) {
             setMessage('Please select an image file.');
             return;
         }
 
-        // File size validation (e.g., max 5MB)
         if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
             setMessage('File size must be less than 5MB.');
             return;
@@ -76,7 +75,7 @@ const Signup = () => {
             setMessage('Upload successful! Redirecting to login...');
             clearFields();
             setTimeout(() => {
-                navigate('/login');  // Redirecting to login page
+                navigate('/login');
             }, 2000);
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -95,46 +94,98 @@ const Signup = () => {
     };
 
     return (
-        <form onSubmit={handleUpload} className="form-container">
-            <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <input
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-            />
-            <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <input
-                type="password"
-                placeholder="Confirm your password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-            />
-            <input
-                type="file"
-                onChange={handleFileChange}
-                disabled={isUploading}
-                required
-            />
-            <button type="submit" disabled={isUploading}>
-                {isUploading ? 'Uploading...' : 'Sign Up and Upload'}
-            </button>
-            {message && <p>{message}</p>}
-            <p>Already have an account? <button type="button" onClick={() => navigate('/login')}>Login</button></p>
+        <form onSubmit={handleUpload} className="container">
+            <h1>SIGN UP!</h1>
+            <p>Fill the form below to <strong>Sign Up</strong></p>
+            <hr style={{ border: '1px solid #999' }} />
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Your Email *"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="email">Email Address</label>
+            </div>
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter Your Name *"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="name">Name</label>
+            </div>
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter Your Password *"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="password">Password</label>
+            </div>
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="password"
+                    id="confirm-password"
+                    name="confirmPassword"
+                    placeholder="Confirm Your Password *"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="confirm-password">Confirm Password</label>
+            </div>
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="file"
+                    id="file"
+                    name="file"
+                    onChange={handleFileChange}
+                    disabled={isUploading}
+                    required
+                />
+                <label htmlFor="file">Profile Picture</label>
+            </div>
+
+            <hr style={{ border: '1px solid #999', marginTop: '0.8rem' }} />
+            <input className="btn" type="submit" value={isUploading ? 'Uploading...' : 'SIGN UP'} disabled={isUploading} />
+            {message && <p className="error">{message}</p>}
+
+            <div className="signup-container">
+                <p>Already have an account?</p>
+                <button type="button" className="signup-button" onClick={() => navigate('/login')}>
+                    Login
+                </button>
+            </div>
         </form>
     );
 };

@@ -8,6 +8,7 @@ const Login = ({ setIsAuthenticated }) => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    const baseUrl = process.env.REACT_APP_BASE_API;
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,16 +24,11 @@ const Login = ({ setIsAuthenticated }) => {
             const response = await axios.post('https://3dn8jif60k.execute-api.us-east-1.amazonaws.com/prod/login', { email, password });
             const { token, profileImageUrl } = response.data;
 
-            // Store token and profile image URL in localStorage
             localStorage.setItem('authToken', token);
             localStorage.setItem('profileImageUrl', profileImageUrl);
 
             setLoading(false);
-
-            // Set authentication status to true in the parent component
-            setIsAuthenticated(true); // Update authentication state
-
-            // Redirect to profile page immediately after login
+            setIsAuthenticated(true);
             navigate('/profile', { replace: true });
         } catch (error) {
             console.error('Login error:', error);
@@ -42,26 +38,53 @@ const Login = ({ setIsAuthenticated }) => {
     };
 
     return (
-        <form onSubmit={handleLogin} className="form-container">
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-            />
-            <button type="submit" disabled={loading}>
-                {loading ? 'Logging in...' : 'Login'}
-            </button>
-            {message && <p>{message}</p>}
-            <p>Don't have an account? <button type="button" onClick={() => navigate('/signup')}>Sign Up</button></p>
+        <form onSubmit={handleLogin} className="container">
+            <h1>LOG IN!</h1>
+            <p>Fill the form below to <strong>Log In</strong></p>
+            <hr style={{ border: '1px solid #999' }} />
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Your Email *"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="email">Email Address</label>
+            </div>
+
+            <div className="form-group">
+                <input
+                    className="form-control"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter Your Password *"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="off"
+                    spellCheck="false"
+                    required
+                />
+                <label htmlFor="password">Password</label>
+            </div>
+
+            <hr style={{ border: '1px solid #999', marginTop: '0.8rem' }} />
+            <input className="btn" type="submit" value={loading ? 'Logging in...' : 'LOG IN'} disabled={loading} />
+            {message && <p className="error">{message}</p>}
+
+            <div className="signup-container">
+                <p>Don't have an account?</p>
+                <button type="button" className="signup-button" onClick={() => navigate('/signup')}>
+                    Sign Up
+                </button>
+            </div>
         </form>
     );
 };
